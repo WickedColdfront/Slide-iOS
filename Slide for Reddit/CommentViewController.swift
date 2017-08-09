@@ -217,7 +217,31 @@ class CommentViewController: MediaViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    let ml = MenuLauncher()
     func more(_ cell: LinkCellView){
+        
+        print("comment menu button clicked")
+        
+        let link = cell.link!
+        
+        ml.menuOptions = []
+        ml.menuOptions.append(MenuOption(name: "/u/\(link.author)", imageName: "folder"))
+        ml.menuOptions.append(MenuOption(name: "/r/\(link.subreddit)", imageName: "up"))
+        if AccountController.isLoggedIn {ml.menuOptions.append(MenuOption(name: "Save", imageName: "down"))}
+        ml.menuOptions.append(MenuOption(name: "Report", imageName: "subbed"))
+        
+        let open = OpenInChromeController.init()
+        if(open.isChromeInstalled()){ml.menuOptions.append(MenuOption(name: "Open in Chrome", imageName: "subs"))}
+        
+        ml.menuOptions.append(MenuOption(name: "Open in Safari", imageName: "subs"))
+        ml.menuOptions.append(MenuOption(name: "Share Content", imageName: "subs"))
+        ml.menuOptions.append(MenuOption(name: "Filter Content", imageName: "subs"))
+        ml.menuOptions.append(MenuOption(name: "Cancel", imageName: "save"))
+        
+        
+        ml.showMenu()
+        
+        /*
         let link = cell.link!
         let actionSheetController: UIAlertController = UIAlertController(title: link.title, message: "", preferredStyle: .actionSheet)
         
@@ -292,7 +316,7 @@ class CommentViewController: MediaViewController, UITableViewDelegate, UITableVi
         
 
         self.present(actionSheetController, animated: true, completion: nil)
-        
+        */
     }
     
     func report(_ thing: Object){
