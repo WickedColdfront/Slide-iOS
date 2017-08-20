@@ -14,10 +14,12 @@ import UIKit
 class MenuOption: NSObject {
     let name: String
     let imageName: String
+    let action: () -> ()
     
-    init(name: String, imageName: String) {
+    init(name: String, imageName: String, action: @escaping () -> ()) {
         self.name = name
         self.imageName = imageName
+        self.action = action
     }
 }
 
@@ -39,27 +41,28 @@ class MenuLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDelega
     
     var menuOptions: [MenuOption] = {
         return [
-            MenuOption(name: "Menu Option 1", imageName: "folder"),
-            MenuOption(name: "Menu Option 2", imageName: "up"),
-            MenuOption(name: "Menu Option 3", imageName: "down"),
-            MenuOption(name: "Menu Option 4", imageName: "subbed"),
-            MenuOption(name: "Menu Option 5", imageName: "subs"),
-            MenuOption(name: "Menu Option 6", imageName: "save")
+            MenuOption(name: "Menu Option 1", imageName: "folder", action: {print("1")}),
+            MenuOption(name: "Menu Option 2", imageName: "up", action: {print("2")}),
+            MenuOption(name: "Menu Option 3", imageName: "down", action: {print("3")}),
+            MenuOption(name: "Menu Option 4", imageName: "subbed", action: {print("4")}),
+            MenuOption(name: "Menu Option 5", imageName: "subs", action: {print("5")}),
+            MenuOption(name: "Menu Option 6", imageName: "save", action: {print("6")})
             ]
     }()
     
     
     func dismissMenu(menuOption: MenuOption) {
-        
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.blackView.alpha = 0
-            if let window = UIApplication.shared.keyWindow {
-                self.collectionView.frame = CGRect(x: 0, y: window.frame.height,width: self.collectionView.frame.width, height: self.collectionView.frame.height)
-            }
-        }, completion: nil)
-        
-        print(menuOption.name)
-        
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                    self.blackView.alpha = 0
+                    if let window = UIApplication.shared.keyWindow {
+                        self.collectionView.frame = CGRect(x: 0, y: window.frame.height,width: self.collectionView.frame.width, height: self.collectionView.frame.height)
+                    }
+                }, completion: {
+                    (value: Bool) in
+                    if menuOption.name != "" {
+                        menuOption.action()
+                    }
+                })
     }
     
     func showMenu(){

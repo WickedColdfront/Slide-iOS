@@ -220,103 +220,52 @@ class CommentViewController: MediaViewController, UITableViewDelegate, UITableVi
     let ml = MenuLauncher()
     func more(_ cell: LinkCellView){
         
-        print("comment menu button clicked")
-        
         let link = cell.link!
         
         ml.menuOptions = []
-        ml.menuOptions.append(MenuOption(name: "/u/\(link.author)", imageName: "folder"))
-        ml.menuOptions.append(MenuOption(name: "/r/\(link.subreddit)", imageName: "up"))
-        if AccountController.isLoggedIn {ml.menuOptions.append(MenuOption(name: "Save", imageName: "down"))}
-        ml.menuOptions.append(MenuOption(name: "Report", imageName: "subbed"))
-        
-        let open = OpenInChromeController.init()
-        if(open.isChromeInstalled()){ml.menuOptions.append(MenuOption(name: "Open in Chrome", imageName: "subs"))}
-        
-        ml.menuOptions.append(MenuOption(name: "Open in Safari", imageName: "subs"))
-        ml.menuOptions.append(MenuOption(name: "Share Content", imageName: "subs"))
-        ml.menuOptions.append(MenuOption(name: "Filter Content", imageName: "subs"))
-        ml.menuOptions.append(MenuOption(name: "Cancel", imageName: "save"))
-        
-        
-        ml.showMenu()
-        
-        /*
-        let link = cell.link!
-        let actionSheetController: UIAlertController = UIAlertController(title: link.title, message: "", preferredStyle: .actionSheet)
-        
-        var cancelActionButton: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { action -> Void in
-            print("Cancel")
-        }
-        actionSheetController.addAction(cancelActionButton)
-        
-        cancelActionButton = UIAlertAction(title: "/u/\(link.author)", style: .default) { action -> Void in
+        ml.menuOptions.append(MenuOption(name: "/u/\(link.author)", imageName: "folder", action: {
             self.show(ProfileViewController.init(name: link.author), sender: self)
-        }
-        actionSheetController.addAction(cancelActionButton)
-        
-        cancelActionButton = UIAlertAction(title: "/r/\(link.subreddit)", style: .default) { action -> Void in
+        }))
+        ml.menuOptions.append(MenuOption(name: "/r/\(link.subreddit)", imageName: "up", action:{
             self.show(SubredditLinkViewController.init(subName: link.subreddit, single: true), sender: self)
-        }
-        actionSheetController.addAction(cancelActionButton)
-        
-        if(AccountController.isLoggedIn){
-            cancelActionButton = UIAlertAction(title: "Save", style: .default) { action -> Void in
-                self.save(cell)
-            }
-            actionSheetController.addAction(cancelActionButton)
-        }
-        
-        cancelActionButton = UIAlertAction(title: "Report", style: .default) { action -> Void in
+        }))
+        if AccountController.isLoggedIn {ml.menuOptions.append(MenuOption(name: "Save", imageName: "down", action: {
+            self.save(cell)
+        }))}
+        ml.menuOptions.append(MenuOption(name: "Report", imageName: "subbed", action: {
             self.report(self.submission!)
-        }
-        actionSheetController.addAction(cancelActionButton)
+        }))
         
         let open = OpenInChromeController.init()
-        if(open.isChromeInstalled()){
-            cancelActionButton = UIAlertAction(title: "Open in Chrome", style: .default) { action -> Void in
-                open.openInChrome(link.url!, callbackURL: nil, createNewTab: true)
-            }
-            actionSheetController.addAction(cancelActionButton)
-        }
+        if(open.isChromeInstalled()){ml.menuOptions.append(MenuOption(name: "Open in Chrome", imageName: "subs", action: {
+            open.openInChrome(link.url!, callbackURL: nil, createNewTab: true)
+        }))}
         
-        cancelActionButton = UIAlertAction(title: "Open in Safari", style: .default) { action -> Void in
+        ml.menuOptions.append(MenuOption(name: "Open in Safari", imageName: "subs", action: {
             if #available(iOS 10.0, *) {
                 UIApplication.shared.open(link.url!, options: [:], completionHandler: nil)
             } else {
                 UIApplication.shared.openURL(link.url!)
             }
-        }
-        actionSheetController.addAction(cancelActionButton)
-        
-        cancelActionButton = UIAlertAction(title: "Share content", style: .default) { action -> Void in
+        }))
+        ml.menuOptions.append(MenuOption(name: "Share Content", imageName: "subs", action: {
             let activityViewController: UIActivityViewController = UIActivityViewController(activityItems: [link.url!], applicationActivities: nil);
             let currentViewController:UIViewController = UIApplication.shared.keyWindow!.rootViewController!
             currentViewController.present(activityViewController, animated: true, completion: nil);
-        }
-        actionSheetController.addAction(cancelActionButton)
-        
-        cancelActionButton = UIAlertAction(title: "Share comments", style: .default) { action -> Void in
+        }))
+        ml.menuOptions.append(MenuOption(name: "Share Comments", imageName: "subs", action: {
             let activityViewController: UIActivityViewController = UIActivityViewController(activityItems: [URL.init(string: "https://reddit.com" + link.permalink)!], applicationActivities: nil);
             let currentViewController:UIViewController = UIApplication.shared.keyWindow!.rootViewController!
             currentViewController.present(activityViewController, animated: true, completion: nil);
-        }
-        actionSheetController.addAction(cancelActionButton)
+        }))
+        ml.menuOptions.append(MenuOption(name: "Filter Content", imageName: "subs", action: {
+           //todo filter content
+        }))
+        ml.menuOptions.append(MenuOption(name: "Cancel", imageName: "save", action: {}))
         
-        cancelActionButton = UIAlertAction(title: "Fiter this content", style: .default) { action -> Void in
-            //todo filter content
-        }
-        actionSheetController.addAction(cancelActionButton)
         
-        actionSheetController.modalPresentationStyle = .popover
-        if let presenter = actionSheetController.popoverPresentationController {
-            presenter.sourceView = cell.contentView
-            presenter.sourceRect = cell.contentView.bounds
-        }
+        ml.showMenu()
         
-
-        self.present(actionSheetController, animated: true, completion: nil)
-        */
     }
     
     func report(_ thing: Object){

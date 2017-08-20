@@ -11,7 +11,7 @@
 
 import UIKit
 
-class BaseCell: UICollectionViewCell { //i'm not sure why this is necessary
+class BaseCell: UICollectionViewCell { 
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
